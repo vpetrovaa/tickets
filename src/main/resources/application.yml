@@ -1,0 +1,15 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: tickets
+  config:
+    import: optional:file:.env[.properties]
+  r2dbc:
+    url: r2dbc:postgresql://${POSTGRES_HOST}:5432/postgres?currentSchema=cinema_schema
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+  jackson:
+    default-property-inclusion: non_null
+  liquibase:
+    change-log: classpath:db.changelog/db.changelog-master.yaml
