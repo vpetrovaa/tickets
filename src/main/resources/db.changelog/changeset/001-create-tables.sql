@@ -35,6 +35,6 @@ create table if not exists tickets
 	film_id bigint null,
     user_id bigint null,
     constraint fk_user foreign key(user_id) references users(id) on delete cascade on update cascade,
-    constraint fk_film foreign key(film_id) references films(id) on delete cascade on update cascade
+    constraint fk_film foreign key(film_id) references films(id) on delete cascade on update cascade,
 	primary key (id)
 );
