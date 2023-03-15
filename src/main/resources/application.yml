@@ -21,3 +21,11 @@ eureka:
 
 web:
   host: ${WEBCLIENT_HOST}
+
+kafka:
+  topic: cinema
+  partitions: 10
+  replicas: 1
+  port: ${KAFKA_PORT}
+  key: ${KAFKA_KEY}
+

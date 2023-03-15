@@ -2,14 +2,13 @@ package com.solvd.tickets.service.impl;
 
 import com.solvd.tickets.domain.Ticket;
 import com.solvd.tickets.domain.exception.NoFreePlacesException;
+import com.solvd.tickets.kafka.KfProducer;
 import com.solvd.tickets.repository.TicketRepository;
 import com.solvd.tickets.service.TicketService;
 import com.solvd.tickets.service.property.WebProperties;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -21,6 +20,7 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
     private final WebProperties webProperties;
+    private final KfProducer kfProducer;
 
     @Override
     public Mono<Ticket> create(Ticket ticket) {
@@ -34,18 +34,20 @@ public class TicketServiceImpl implements TicketService {
                 .bodyToMono(Integer.class);
         return placesMono.flatMap(value -> {
             if(value < ticket.getAmount()) {
-                return Mono.error(new NoFreePlacesException("There are only " + value + " free places"));
+                if(value == 0){
+                    kfProducer.send(ticket.getFilmId().toString());
+                }
+                return Mono.error(new NoFreePlacesException("There are not enough  free places"));
             }
             else {
-                Mono<String> response = webClient.put()
+                Mono<Object> response = webClient.put()
                         .uri("/films/api/v1/films/" + ticket.getFilmId() + "/" + ticket.getAmount())
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON)
                         .retrieve()
-                        .bodyToMono(String.class);
+                        .bodyToMono(Object.class);
                 return ticketRepository.save(ticket);
             }
         });
-        //TODO update amount of film showing
     }
 
     @Override
