@@ -26,7 +26,6 @@
 		<preliquibase.version>1.3.0</preliquibase.version>
 		<validation.version>3.0.2</validation.version>
 		<httpcomponents.version>5.2.1</httpcomponents.version>
-		<eureka.version>4.0.0</eureka.version>
 		<openfeign.version>4.0.1</openfeign.version>
 		<r2dbc.version>1.0.0.RELEASE</r2dbc.version>
 		<eureka.version>4.0.0</eureka.version>
@@ -98,12 +97,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-			<version>${eureka.version}</version>
 		</dependency>
 
 		<dependency>
