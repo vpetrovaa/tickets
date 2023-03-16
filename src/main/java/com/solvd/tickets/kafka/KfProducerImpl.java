@@ -1,6 +1,6 @@
 package com.solvd.tickets.kafka;
 
-import com.solvd.tickets.kafka.property.KfProperty;
+import com.solvd.tickets.kafka.property.KfProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,16 +13,16 @@ import reactor.kafka.sender.SenderRecord;
 @RequiredArgsConstructor
 public class KfProducerImpl implements KfProducer{
 
-    private final KfProperty kfProperty;
+    private final KfProperties kfProperties;
     private final KafkaSender<String, String> kafkaSender;
 
     @Override
     public void send(String message) {
         this.kafkaSender.send(Mono.just(SenderRecord.create(
-                        kfProperty.getTopic(),
+                        kfProperties.getTopic(),
                         2,
                         System.currentTimeMillis(),
-                        kfProperty.getKey(),
+                        kfProperties.getKey(),
                         message,
                         null)))
                 .subscribe();
