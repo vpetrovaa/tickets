@@ -1,7 +1,7 @@
 package com.solvd.tickets.service.impl;
 
 import com.solvd.tickets.domain.Ticket;
-import com.solvd.tickets.domain.exception.NoFreePlacesException;
+import com.solvd.tickets.domain.exception.AllTicketsSoldException;
 import com.solvd.tickets.kafka.KfProducer;
 import com.solvd.tickets.repository.TicketRepository;
 import com.solvd.tickets.service.TicketService;
@@ -37,7 +37,7 @@ public class TicketServiceImpl implements TicketService {
                 if(value == 0){
                     kfProducer.send(ticket.getFilmId().toString());
                 }
-                return Mono.error(new NoFreePlacesException("There are not enough  free places"));
+                return Mono.error(new AllTicketsSoldException("All tickets were sold."));
             }
             else {
                 Mono<Object> response = webClient.put()
